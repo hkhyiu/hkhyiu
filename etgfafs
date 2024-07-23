@@ -1,0 +1,36 @@
+    public static void addStudent(ArrayList<Student> array){
+        Scanner sc=new Scanner(System.in);
+        String sid;
+        while(true) {
+            System.out.println("请输入学生的学号：");
+            sid = sc.nextLine();
+
+            boolean flag = isUsed(array, sid);
+            if (flag) {
+                System.out.println("你输入的学号已被占用，请重新输入：");
+            }
+            else{
+                break;
+            }
+        }
+        System.out.println("请输入学生的姓名：");
+        String name=sc.nextLine();
+        System.out.println("请输入学生的年龄：");
+        String age=sc.nextLine();
+        System.out.println("请输入学生的居住地：");
+        String address=sc.nextLine();
+
+        //创建学生对象，将键盘录入的数据赋值给学生对象的成员变量
+        Student s=new Student();
+        s.setSid(sid);
+        s.setName(name);
+        s.setAge(age);
+        s.setAddress(address);
+
+        //将学生对象添加到集合中
+        array.add(s);
+
+        //给出添加成功提示
+        System.out.println("添加学生成功");
+    }
+g
