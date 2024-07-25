@@ -1,0 +1,43 @@
+import http from '@ohos.net.http';
+import Response from './Response';
+ 
+//导出httpRequest请求函数
+export function request(url: string, method: http.RequestMethod, requestData?: any): Promise<Response>{
+  //如果使用本地模拟器，则ip为本机的IP地址
+  const BASE_URL: string = "http://ip:服务端端口号"
+  let httpRequest = http.createHttp()
+  let responseResult = httpRequest.request(
+    BASE_URL + url,
+    {
+      method: method,
+      header: {
+        'Content-Type': 'application/json'
+      },
+      //携带额外参数
+      extraData: JSON.stringify(requestData),
+      //可选，默认为60000ms
+      connectTimeout: 60000,
+      readTimeout: 60000,
+    }
+  )
+  let response = new Response();
+  //处理数据，并返回
+  return responseResult.then((value: http.HttpResponse) => {
+    if (value.responseCode === 200) {
+      //获取返回数据,将返回的json数据解析成事先预定好的响应格式
+      //这里建议和后端的保持一致
+      let res: Response = JSON.parse(`${value.result}`);
+      response.data = res.data;
+      response.code = res.code;
+      response.msg = res.msg;
+     }else {
+       response.msg = '请求错误';
+       response.code = 400;
+     }
+     return response;
+  }).catch(() => {
+    response.msg = '请求错误';
+    response.code = 400;
+    return response;
+  });
+}
